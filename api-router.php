@@ -9,7 +9,7 @@
 
     // defina la tabla de ruteo
 
-    //Teams
+    //////Teams
     $router->addRoute('teams', 'GET', 'TeamApiController', 'getTeams');
     $router->addRoute('teams/:ID', 'GET', 'TeamApiController', 'getTeam');
     $router->addRoute('teams/:ID', 'DELETE', 'TeamApiController', 'deleteTeam');
@@ -17,14 +17,14 @@
     $router->addRoute('teams/:ID', 'PUT', 'TeamApiController', 'updateTeam'); 
 
 
-    //Players
+    //////Players
     $router->addRoute('players', 'GET', 'PlayerApiController', 'getPlayers');
     $router->addRoute('players/:ID', 'GET', 'PlayerApiController', 'getPlayer');
     $router->addRoute('players/:ID', 'DELETE', 'PlayerApiController', 'deletePlayer');
     $router->addRoute('players', 'POST', 'PlayerApiController', 'insertPlayer'); 
     $router->addRoute('players/:ID', 'PUT', 'PlayerApiController', 'updatePlayer'); 
 
-    //Token
+    ///////Token
     $router->addRoute("auth/token", 'GET', 'UserAuthApiController', 'getToken');
 
 

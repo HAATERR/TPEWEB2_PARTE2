@@ -15,6 +15,19 @@ class PlayerModel{
         $players = $query->fetchAll(PDO::FETCH_OBJ);
         return $players;
     }
+    
+    
+    function getByOrder($sort,$order){
+        $db = $this->getDB();
+        $query = $this->db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id ORDER BY $sort $order");
+        $query->execute();
+        $players = $query->fetchAll(PDO::FETCH_OBJ);
+        return $players;
+
+
+    }
+    
+    
     function getAllPlayers() {
         // 1. abro conexión a la DB
         $db = $this->getDB();
@@ -30,7 +43,7 @@ class PlayerModel{
     
     
         
-}
+    }
 
     function getPlayersByTeam($id){
        $db = $this->getDB();
@@ -46,7 +59,7 @@ class PlayerModel{
         $query->execute([$id]);
         $player = $query->fetchAll(PDO::FETCH_OBJ);
         return $player;
-}
+    }
 
     function insert($number,$position,$player_name,$team){
         var_dump($number,$position,$player_name,$team);
@@ -61,14 +74,16 @@ class PlayerModel{
     $db = $this->getDB();
     $query = $db->prepare("DELETE FROM players WHERE Players_id = ?");
     $query->execute([$id]);
-}
+    
+    }
 
 
 function update($number,$position,$player_name,$team,$id) {
     $db = $this->getDB();
     $query = $db->prepare('UPDATE players SET Number = ?,Position = ?,Player_Name = ?,Team = ? WHERE Players_id = ?');
     $query->execute([$number,$position,$player_name,$team,$id]);
-}
+    
+    }
 
 
     

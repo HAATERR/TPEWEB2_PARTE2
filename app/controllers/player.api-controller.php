@@ -24,8 +24,22 @@ require_once './app/helpers/auth.api.helper.php';
         public function getPlayers($params = null) {
             $players = $this->model->getAllPlayers();
             $this->view->response($players);
+            if (isset($_GET['sort']) && isset($_GET['order']))
+            {
+              $sort = $_GET['sort'];
+              $order = $_GET['order'];
+              $players = $this->model->getByOrder($sort,$order);
+              if ($players)
+              {
+                $this->view->response($players);
+              }
+              else
+              {
+                $this->view->response("Ese orden no existe",404);
+              }
+        
+            }
         }
-
         public function getPlayer($params = null) {
             // obtengo el id del arreglo de params
             $id = $params[':ID'];
