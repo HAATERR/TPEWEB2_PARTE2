@@ -13,7 +13,6 @@ require_once './app/helpers/auth.api.helper.php';
             $this->model = new PlayerModel();
             $this->view = new ApiView();
             $this->helper = new ApiHelper();
-            // lee el body del request
             $this->data = file_get_contents("php://input");
         }
 
@@ -24,20 +23,28 @@ require_once './app/helpers/auth.api.helper.php';
         public function getPlayers($params = null) {
             $players = $this->model->getAllPlayers();
             $this->view->response($players);
-            if (isset($_GET['sort']) && isset($_GET['order']))
-            {
+            
+            if (isset($_GET['sort']) && isset($_GET['order'])){
               $sort = $_GET['sort'];
               $order = $_GET['order'];
               $players = $this->model->getByOrder($sort,$order);
-              if ($players)
-              {
+              if ($players){
                 $this->view->response($players);
               }
-              else
-              {
+              else{
                 $this->view->response("Ese orden no existe",404);
               }
         
+            }
+            else if(isset($_GET['page']) && isset($_GET['limit'])){
+                $page = $_GET['page'];
+                $limit = $_GET['limit'];
+                $players = $this->model->getPagination($page,$limit);
+                if ($players){
+                    $this->view->response($players);
+                }else{
+                    $this->view->response("No se encontraron Los Jugadores",404);
+                }
             }
         }
         public function getPlayer($params = null) {
@@ -63,7 +70,7 @@ require_once './app/helpers/auth.api.helper.php';
                 $this->model->delete($id);
                 $this->view->response($player);
             } else 
-                $this->view->response("El equipo con el id=$id no existe", 404);
+                $this->view->response("El jugador con el id=$id no existe", 404);
         }
 
         public function insertPlayer($params = null) {
