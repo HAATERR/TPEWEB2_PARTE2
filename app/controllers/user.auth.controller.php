@@ -11,7 +11,7 @@ function base64url_encode($data) {
         
         public function __construct(){
             
-            $this->model = new UserModel();
+            $this->model = new Usermodel();
         }
         
         public function getToken($params = null) {
@@ -32,20 +32,21 @@ function base64url_encode($data) {
             $userpass = explode(":", $userpass);
             $user = $userpass[0];
             $pass = $userpass[1];
-            if($user == "abc" && $pass == "abc"){
+            $authDB = $this->model->getAllUsersByEmail($user);
+            if(isset($authDB->email) && password_verify($pass,$authDB->password)){
                 //  crear un token
                 $header = array(
                     'alg' => 'HS256',
                     'typ' => 'JWT'
                 );
                 $payload = array(
-                    'id' => 1,
-                    'name' => "abc",
+                    'id' => $authDB->User_id,
+                    'name' => "$authDB->email",
                     'exp' => time()+3600
                 );
                 $header = base64url_encode(json_encode($header));
                 $payload = base64url_encode(json_encode($payload));
-                $signature = hash_hmac('SHA256', "$header.$payload", "Clave1234", true);
+                $signature = hash_hmac('SHA256', "$header.$payload", "Clave123", true);
                 $signature = base64url_encode($signature);
                 $token = "$header.$payload.$signature";
                 $this->view->response($token);
