@@ -1,5 +1,5 @@
 <?php
-require_once './app/models/Player.model.php';
+require_once './app/models/Player.Model.php';
 require_once './app/views/api.view.php';
 require_once './app/helpers/auth.api.helper.php';
 
@@ -7,12 +7,12 @@ require_once './app/helpers/auth.api.helper.php';
         private $model;
         private $view;
         private $data;
-        private $helper;
+        private $authHelper;
 
         public function __construct() {
             $this->model = new PlayerModel();
             $this->view = new ApiView();
-            $this->helper = new ApiHelper();
+            $this->authHelper = new ApiHelper();
             $this->data = file_get_contents("php://input");
         }
 
@@ -51,12 +51,13 @@ require_once './app/helpers/auth.api.helper.php';
             // obtengo el id del arreglo de params
             $id = $params[':ID'];
             $player = $this->model->getPlayer($id);
-
+            var_dump($player);
             // si no existe devuelvo 404
-            if ($player)
-                $this->view->response($player);
-            else 
+            if ($player){
+                $this->view->response($player);}
+            else {
                 $this->view->response("El jugador con el id=$id no existe", 404);
+            }
         }
 
         public function deletePlayer($params = null) {
@@ -75,28 +76,30 @@ require_once './app/helpers/auth.api.helper.php';
 
         public function insertPlayer($params = null) {
             $player = $this->getData();
-            if(!$this->authHelper->isLoggedIn()){
+           if(!$this->authHelper->isLoggedIn()){
                 $this->view->response("No estas logeado", 401);
                 return;
               }
-            if (empty($player->Number) || empty($player->Position) || empty($player->Player_Name)) {
+            if (empty($player->Number) || empty($player->Position) || empty($player->Player_Name) || empty($player->Team_id_fk)){
                 $this->view->response("Complete los datos", 400);
             } else {
-                $id = $this->model->insert($player->number, $player->position, $player->player_Name, $player->team);
+                
+                $id = $this->model->insert($player->Number, $player->Position, $player->Player_Name, $player->Team_id_fk);
+                var_dump($id);
                 $player = $this->model->getPlayer($id);
-                $this->view->response($player, 201);
+                $this->view->response("Se creo exitosamente", 201);
             }
         }
         public function updatePlayer($params = null){
             $id = $params[':ID'];
             $player = $this->model->getPlayer($id);
-            if(!$this->authHelper->isLoggedIn()){
-                $this->view->response("No estas logeado", 401);
-                return;
-              }
+            //if(!$this->authHelper->isLoggedIn()){
+              //  $this->view->response("No estas logeado", 401);
+                //return;
+              //}
             if ($player){
             $player = $this->getData();
-            $id = $this->model->update($player->number,$player->position,$player->player_name,$player->team,$id);
+            $id = $this->model->update($player->Number,$player->Position,$player->Player_Name,$player->Team_id_fk,$id);
             $this->view->response("El jugador con id=$id se actualizo correctamente",200);
             }else {
             $this->view->response("El jugador no existe",404);

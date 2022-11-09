@@ -10,8 +10,9 @@ function base64url_encode($data) {
     class UserAuthApiController{
         
         public function __construct(){
-            
+            $this->authHelper = new ApiHelper();
             $this->model = new Usermodel();
+            $this->view = new ApiView();
         }
         
         public function getToken($params = null) {
@@ -22,6 +23,7 @@ function base64url_encode($data) {
                 return;
             }
             $basic = explode(" ",$basic); // ["Basic" "base64(user:pass)"]
+            var_dump($basic);
             if($basic[0]!="Basic"){
                 $this->view->response('La autenticación debe ser Basic', 401);
                 return;
@@ -31,9 +33,9 @@ function base64url_encode($data) {
             $userpass = base64_decode($basic[1]); // user:pass
             $userpass = explode(":", $userpass);
             $user = $userpass[0];
-            $pass = $userpass[1];
+            $password = $userpass[1];
             $authDB = $this->model->getAllUsersByEmail($user);
-            if(isset($authDB->email) && password_verify($pass,$authDB->password)){
+            if(isset($authDB->email) && password_verify($password,$authDB->password)){
                 //  crear un token
                 $header = array(
                     'alg' => 'HS256',

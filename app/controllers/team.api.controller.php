@@ -8,14 +8,12 @@ require_once './app/helpers/auth.api.helper.php';
         private $model;
         private $view;
         private $data;
-        private $helper;
+        private $authHelper;
 
         public function __construct() {
             $this->model = new TeamModel();
             $this->view = new ApiView();
-            $this->helper = new ApiHelper();
-            
-            // lee el body del request
+            $this->authHelper = new ApiHelper();
             $this->data = file_get_contents("php://input");
         }
 
@@ -67,7 +65,7 @@ require_once './app/helpers/auth.api.helper.php';
             if (empty($team->Team) || empty($team->Rings) || empty($team->City)) {
                 $this->view->response("Complete los datos", 400);
             } else {
-                $id = $this->model->insert($team->team, $team->rings, $team->city);
+                $id = $this->model->insert($team->Team, $team->Rings, $team->City);
                 $team = $this->model->teamId($id);
                 $this->view->response($team, 201);
             }

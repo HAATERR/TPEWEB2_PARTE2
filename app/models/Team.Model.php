@@ -41,7 +41,7 @@ class TeamModel{
         $db = $this->getDB();
         $query = $db->prepare('SELECT * FROM team WHERE Team_id = ?');
         $query->execute([$id]);
-        $team = $query->fetchAll(PDO::FETCH_OBJ);
+        $team = $query->fetch(PDO::FETCH_OBJ);
         return $team;
     }
     function update($team,$rings,$city,$id) {

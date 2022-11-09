@@ -10,9 +10,9 @@ class PlayerModel{
 
      function getPlayer($id){
         $db = $this->getDB();
-        $query = $db->prepare('SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id WHERE players.Team_id_fk = ?');
+        $query = $db->prepare('SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id WHERE players.Players_id = ?');
         $query->execute([$id]); 
-        $players = $query->fetchAll(PDO::FETCH_OBJ);
+        $players = $query->fetch(PDO::FETCH_OBJ);
         return $players;
     }
     
@@ -68,7 +68,7 @@ class PlayerModel{
         return $players;
       }
     function insert($number,$position,$player_name,$team){
-        var_dump($number,$position,$player_name,$team);
+        
         $db = $this->getDB();
         $query = $db->prepare('INSERT INTO players  (Number, Position, Player_Name, Team_id_fk) VALUES (?, ?, ?, ?)');
         $query->execute([$number,$position,$player_name,$team]);
@@ -84,9 +84,9 @@ class PlayerModel{
     }
 
 
-function update($number,$position,$player_name,$team,$id) {
+    function update($number,$position,$player_name,$team,$id) {
     $db = $this->getDB();
-    $query = $db->prepare('UPDATE players SET Number = ?,Position = ?,Player_Name = ?,Team = ? WHERE Players_id = ?');
+    $query = $db->prepare('UPDATE players SET Number = ?,Position = ?,Player_Name = ?,Team_id_fk = ? WHERE Players_id = ?');
     $query->execute([$number,$position,$player_name,$team,$id]);
     
     }
