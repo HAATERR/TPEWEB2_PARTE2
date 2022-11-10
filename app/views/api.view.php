@@ -5,8 +5,6 @@ class ApiView {
     public function response($data, $status = 200) {
         header("Content-Type: application/json");
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
-        
-        // convierte los datos a un formato json
         echo json_encode($data);
     }
 
@@ -22,5 +20,4 @@ class ApiView {
         );
         return (isset($status[$code])) ? $status[$code] : $status[500];
       }
-  
 }

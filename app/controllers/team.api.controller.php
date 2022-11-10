@@ -45,16 +45,14 @@ require_once './app/helpers/auth.api.helper.php';
                 return;
               }
             $team = $this->model->teamId($id);
-            if ($team){
-                if ($this->model->delete($id)){
+            if ($team){   
+                  $this->model->delete($id);
                   $this->view->response("El equipo con id: $id se elimino correctamente",200);
-                }else {
+                }else 
                   $this->view->response("El equipo no se pudo eliminar porque tiene jugadores aun, elimine los jugadores pertenecientes a este equipo primero",400);
-                }
-              }else {
-                $this->view->response("El equipo no se pudo eliminar",404);
-              }
-        }
+                
+            }
+          
 
         public function insertTeam($params = null) {
             $team = $this->getData();
@@ -67,7 +65,7 @@ require_once './app/helpers/auth.api.helper.php';
             } else {
                 $id = $this->model->insert($team->Team, $team->Rings, $team->City);
                 $team = $this->model->teamId($id);
-                $this->view->response($team, 201);
+                $this->view->response("Se creo exitosamente", 201);
             }
         }
         public function updateTeam($params = null){

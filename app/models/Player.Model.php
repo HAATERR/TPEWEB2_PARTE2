@@ -18,12 +18,15 @@ class PlayerModel{
     
     
     function getByOrder($sort,$order){
-        $db = $this->getDB();
-        $query = $this->db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id ORDER BY $sort $order");
-        $query->execute();
-        $players = $query->fetchAll(PDO::FETCH_OBJ);
-        return $players;
-
+        try{
+            $db = $this->getDB();
+            $query = $db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id ORDER BY $sort $order");
+            $query->execute();
+            $players = $query->fetchAll(PDO::FETCH_OBJ);
+            return $players;
+        }catch (\Throwable $th) {
+            return false;
+          }
 
     }
     

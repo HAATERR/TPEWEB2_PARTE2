@@ -28,13 +28,16 @@ require_once './app/helpers/auth.api.helper.php';
               $sort = $_GET['sort'];
               $order = $_GET['order'];
               $players = $this->model->getByOrder($sort,$order);
+              
               if ($players){
-                $this->view->response($players);
+                $this->view->response($players,200);
               }
               else{
                 $this->view->response("Ese orden no existe",404);
               }
-        
+              if($order != 'asc' && $order != 'desc'){
+                $this->view->response("No puede ingresar cosas malisiosas",404);
+              }
             }
             else if(isset($_GET['page']) && isset($_GET['limit'])){
                 $page = $_GET['page'];
@@ -45,13 +48,13 @@ require_once './app/helpers/auth.api.helper.php';
                 }else{
                     $this->view->response("No se encontraron Los Jugadores",404);
                 }
+
             }
         }
         public function getPlayer($params = null) {
             // obtengo el id del arreglo de params
             $id = $params[':ID'];
             $player = $this->model->getPlayer($id);
-            var_dump($player);
             // si no existe devuelvo 404
             if ($player){
                 $this->view->response($player);}
@@ -69,14 +72,15 @@ require_once './app/helpers/auth.api.helper.php';
             $player = $this->model->getPlayer($id);
             if ($player) {
                 $this->model->delete($id);
-                $this->view->response($player);
+                $this->view->response("Se elimino correctamente", $player);
+
             } else 
                 $this->view->response("El jugador con el id=$id no existe", 404);
         }
 
         public function insertPlayer($params = null) {
             $player = $this->getData();
-           if(!$this->authHelper->isLoggedIn()){
+            if(!$this->authHelper->isLoggedIn()){
                 $this->view->response("No estas logeado", 401);
                 return;
               }
@@ -85,7 +89,6 @@ require_once './app/helpers/auth.api.helper.php';
             } else {
                 
                 $id = $this->model->insert($player->Number, $player->Position, $player->Player_Name, $player->Team_id_fk);
-                var_dump($id);
                 $player = $this->model->getPlayer($id);
                 $this->view->response("Se creo exitosamente", 201);
             }
@@ -93,10 +96,10 @@ require_once './app/helpers/auth.api.helper.php';
         public function updatePlayer($params = null){
             $id = $params[':ID'];
             $player = $this->model->getPlayer($id);
-            //if(!$this->authHelper->isLoggedIn()){
-              //  $this->view->response("No estas logeado", 401);
-                //return;
-              //}
+            if(!$this->authHelper->isLoggedIn()){
+                $this->view->response("No estas logeado", 401);
+                return;
+              }
             if ($player){
             $player = $this->getData();
             $id = $this->model->update($player->Number,$player->Position,$player->Player_Name,$player->Team_id_fk,$id);

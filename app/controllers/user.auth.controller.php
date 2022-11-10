@@ -23,7 +23,6 @@ function base64url_encode($data) {
                 return;
             }
             $basic = explode(" ",$basic); // ["Basic" "base64(user:pass)"]
-            var_dump($basic);
             if($basic[0]!="Basic"){
                 $this->view->response('La autenticación debe ser Basic', 401);
                 return;
