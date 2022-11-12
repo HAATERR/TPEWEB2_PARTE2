@@ -7,6 +7,27 @@ class TeamModel{
     }
 
     
+    function getByOrder($sort,$order){
+        try{
+            $db = $this->getDB();
+            $query = $db->prepare("SELECT * FROM team ORDER BY $sort $order");
+            $query->execute();
+            $teams = $query->fetchAll(PDO::FETCH_OBJ);
+            return $teams;
+        }catch (\Throwable $th) {
+            return false;
+          }
+
+    }
+
+    function getPagination($page,$limit){
+        $db = $this->getDB();
+        $off = ($limit * $page) - $limit;
+        $query = $db->prepare("SELECT * FROM team ORDER BY Team_id ASC LIMIT $limit OFFSET $off");
+        $query->execute();
+        $teams = $query->fetchAll(PDO::FETCH_OBJ);
+        return $teams;
+      }
 
 
     function getAllTeams() {

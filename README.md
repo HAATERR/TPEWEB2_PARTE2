@@ -40,6 +40,8 @@ GET api/teams.
 .OBTENER EQUIPO:
 GET api/teams/:ID.
 
+.OBTENER JUGADOR POR ORDEN:
+GET api/teams?sort=id&order=asc/desc.
 
 .CREAR EQUIPO:
 POST api/teamas.

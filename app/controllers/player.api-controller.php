@@ -65,10 +65,6 @@ require_once './app/helpers/auth.api.helper.php';
 
         public function deletePlayer($params = null) {
             $id = $params[':ID'];
-            if(!$this->authHelper->isLoggedIn()){
-                $this->view->response("No estas logeado", 401);
-                return;
-              }
             $player = $this->model->getPlayer($id);
             if ($player) {
                 $this->model->delete($id);

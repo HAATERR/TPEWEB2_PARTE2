@@ -24,8 +24,32 @@ require_once './app/helpers/auth.api.helper.php';
         public function getTeams($params = null) {
             $teams = $this->model->getAllTeams();
             $this->view->response($teams);
+            if (isset($_GET['sort']) && isset($_GET['order'])){
+                $sort = $_GET['sort'];
+                $order = $_GET['order'];
+                $teams = $this->model->getByOrder($sort,$order);
+                
+                if ($teams){
+                  $this->view->response($teams,200);
+                }
+                else{
+                  $this->view->response("Ese orden no existe",404);
+                }
+                if($order != 'asc' && $order != 'desc'){
+                  $this->view->response("No puede ingresar cosas malisiosas",404);
+                }
+              }
+              else if(isset($_GET['page']) && isset($_GET['limit'])){
+                $page = $_GET['page'];
+                $limit = $_GET['limit'];
+                $teams = $this->model->getPagination($page,$limit);
+                if ($teams){
+                    $this->view->response($teams);
+                }else{
+                    $this->view->response("No se encontraron Los Equipos",404);
+                }
+            }
         }
-
         public function getTeam($params = null) {
             // obtengo el id del arreglo de params
             $id = $params[':ID'];
@@ -40,10 +64,6 @@ require_once './app/helpers/auth.api.helper.php';
 
         public function deleteTeam($params = null) {
             $id = $params[':ID'];
-            if(!$this->authHelper->isLoggedIn()){
-                $this->view->response("No estas logeado", 401);
-                return;
-              }
             $team = $this->model->teamId($id);
             if ($team){   
                   $this->model->delete($id);
