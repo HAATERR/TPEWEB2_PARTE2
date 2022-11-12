@@ -21,14 +21,20 @@ class TeamModel{
     }
 
     function getPagination($page,$limit){
-        $db = $this->getDB();
-        $off = ($limit * $page) - $limit;
-        $query = $db->prepare("SELECT * FROM team ORDER BY Team_id ASC LIMIT $limit OFFSET $off");
-        $query->execute();
-        $teams = $query->fetchAll(PDO::FETCH_OBJ);
-        return $teams;
-      }
-
+        try{
+            $db = $this->getDB();
+            $off = ($limit * $page) - $limit;
+            $query = $db->prepare("SELECT * FROM team ORDER BY Team_id ASC LIMIT $limit OFFSET $off");
+            $query->bindParam(1, $limit, PDO::PARAM_INT);
+            $query->bindParam(2, $off, PDO::PARAM_INT);
+            $query->execute();
+            $teams = $query->fetchAll(PDO::FETCH_OBJ);
+            return $teams;
+            }
+            catch (\Throwable $th) {
+                return false;
+            }
+    }
 
     function getAllTeams() {
         // 1. abro conexión a la DB
@@ -44,20 +50,27 @@ class TeamModel{
         return $teams;
 
 
-}
+    }
+    
     function insert($team, $rings, $city) {
         $db = $this->getDB();
         $query = $db->prepare("INSERT INTO team ( Team, Rings, City) VALUES (?, ?, ?)");
         $query->execute([$team, $rings, $city]);
 
         return $db->lastInsertId();
-}
+    }
 
     function delete($id) {
+       try{
         $db = $this->getDB();
         $query = $db->prepare('DELETE FROM team WHERE Team_id = ?');
         $query->execute([$id]);
+       }
+       catch(Exception $e){
+            return $e;
+       }
     }
+    
     function teamId($id){
         $db = $this->getDB();
         $query = $db->prepare('SELECT * FROM team WHERE Team_id = ?');
@@ -65,6 +78,7 @@ class TeamModel{
         $team = $query->fetch(PDO::FETCH_OBJ);
         return $team;
     }
+    
     function update($team,$rings,$city,$id) {
         $db = $this->getDB();
         $query = $db->prepare('UPDATE team SET Team = ?,Rings = ?,City = ? WHERE Team_id = ?');

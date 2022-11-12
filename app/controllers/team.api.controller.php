@@ -67,9 +67,9 @@ require_once './app/helpers/auth.api.helper.php';
             $team = $this->model->teamId($id);
             if ($team){   
                   $this->model->delete($id);
-                  $this->view->response("El equipo con id: $id se elimino correctamente",200);
-                }else 
                   $this->view->response("El equipo no se pudo eliminar porque tiene jugadores aun, elimine los jugadores pertenecientes a este equipo primero",400);
+                }else 
+                  $this->view->response("El equipo con id=$id se elimino correctamente",200);
                 
             }
           

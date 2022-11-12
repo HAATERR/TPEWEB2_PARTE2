@@ -64,13 +64,20 @@ class PlayerModel{
         return $player;
     }
     public function getPagination($page,$limit){
-        $db = $this->getDB();
-        $off = ($limit * $page) - $limit;
-        $query = $db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id ORDER BY Players_id ASC LIMIT $limit OFFSET $off");
-        $query->execute();
-        $players = $query->fetchAll(PDO::FETCH_OBJ);
-        return $players;
-      }
+        try{
+            $db = $this->getDB();
+            $off = ($limit * $page) - $limit;
+            $query = $db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id ORDER BY Players_id ASC LIMIT $limit OFFSET $off");
+            $query->bindParam(1, $limit, PDO::PARAM_INT);
+            $query->bindParam(2, $off, PDO::PARAM_INT);
+            $query->execute();
+            $players = $query->fetchAll(PDO::FETCH_OBJ);
+            return $players;
+        }
+        catch (\Throwable $th) {
+            return false;
+          }
+    }
     function insert($number,$position,$player_name,$team){
         
         $db = $this->getDB();
