@@ -27,22 +27,31 @@ require_once './app/helpers/auth.api.helper.php';
             if (isset($_GET['sort']) && isset($_GET['order'])){
               $sort = $_GET['sort'];
               $order = $_GET['order'];
-              $players = $this->model->getByOrder($sort,$order);
+              ;
               
-              if ($players){
-                $this->view->response($players,200);
-              }
-              else{
-                $this->view->response("Ese orden no existe",404);
-              }
-              if($order != 'asc' && $order != 'desc'){
-                $this->view->response("No puede ingresar cosas malisiosas",404);
-              }
+              if($this->antiInyeccions($sort) && ($order == 'asc' || $order == 'desc' )){
+                $players = $this->model->getByOrder($sort,$order);
+                    if ($players){
+                        $this->view->response($players,200);
+                    }
+                    else{
+                        $this->view->response("Ese orden no existe",404);
+                      }
+                }
+                    else{
+                        $this->view->response("Ese orden no existe",404);
+                    }
+              
+              
+             
             }
             else if(isset($_GET['page']) && isset($_GET['limit'])){
                 $page = $_GET['page'];
                 $limit = $_GET['limit'];
-                $players = $this->model->getPagination($page,$limit);
+                $page = (int)$page;
+                $limit = (int)$limit;
+                $off = ($limit * $page) - $limit;
+                $players = $this->model->getPagination($off,$limit);
                 if ($players){
                     $this->view->response($players);
                 }else{
@@ -104,4 +113,17 @@ require_once './app/helpers/auth.api.helper.php';
             $this->view->response("El jugador no existe",404);
         }
     }
-    }
+    
+
+        private function antiInyeccions($columna){
+            $whitelist = array(
+                0 => 'Players_id',
+                1 => 'Player_Name',
+                2 => 'Position',
+                3 => 'Number',
+                4 => 'Team_id_fk'
+            );
+            return in_array($columna,$whitelist);
+        }
+
+}

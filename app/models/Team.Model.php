@@ -20,11 +20,11 @@ class TeamModel{
 
     }
 
-    function getPagination($page,$limit){
+    function getPagination($off,$limit){
+            
         try{
             $db = $this->getDB();
-            $off = ($limit * $page) - $limit;
-            $query = $db->prepare("SELECT * FROM team ORDER BY Team_id ASC LIMIT $limit OFFSET $off");
+            $query = $db->prepare("SELECT * FROM team ORDER BY Team_id  LIMIT ? OFFSET ?");
             $query->bindParam(1, $limit, PDO::PARAM_INT);
             $query->bindParam(2, $off, PDO::PARAM_INT);
             $query->execute();
@@ -34,7 +34,7 @@ class TeamModel{
             catch (\Throwable $th) {
                 return false;
             }
-    }
+        }
 
     function getAllTeams() {
         // 1. abro conexión a la DB
@@ -85,4 +85,4 @@ class TeamModel{
         $query->execute([$team,$rings,$city,$id]);
     }
 
-}
+    }

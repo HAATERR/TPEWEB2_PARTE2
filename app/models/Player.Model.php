@@ -63,11 +63,11 @@ class PlayerModel{
         $player = $query->fetchAll(PDO::FETCH_OBJ);
         return $player;
     }
-    public function getPagination($page,$limit){
+    public function getPagination($off,$limit){
+       
         try{
             $db = $this->getDB();
-            $off = ($limit * $page) - $limit;
-            $query = $db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id ORDER BY Players_id ASC LIMIT $limit OFFSET $off");
+            $query = $db->prepare("SELECT players.*, team.* FROM players JOIN team ON players.Team_id_fk = team.Team_id  LIMIT ? OFFSET ?");
             $query->bindParam(1, $limit, PDO::PARAM_INT);
             $query->bindParam(2, $off, PDO::PARAM_INT);
             $query->execute();
