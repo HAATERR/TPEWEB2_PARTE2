@@ -37,14 +37,11 @@ require_once './app/helpers/auth.api.helper.php';
                     else{
                         $this->view->response("Ese orden no existe",404);
                       }
-                }
+                    }
                     else{
                         $this->view->response("Ese orden no existe",404);
                     }
-              
-              
-             
-            }
+              }
             else if(isset($_GET['page']) && isset($_GET['limit'])){
                 $page = $_GET['page'];
                 $limit = $_GET['limit'];
@@ -68,7 +65,7 @@ require_once './app/helpers/auth.api.helper.php';
             if ($player){
                 $this->view->response($player);}
             else {
-                $this->view->response("El jugador con el id=$id no existe", 404);
+                $this->view->response("El jugador no existe", 404);
             }
         }
 
@@ -80,7 +77,7 @@ require_once './app/helpers/auth.api.helper.php';
                 $this->view->response("Se elimino correctamente", $player);
 
             } else 
-                $this->view->response("El jugador con el id=$id no existe", 404);
+                $this->view->response("El jugador no existe", 404);
         }
 
         public function insertPlayer($params = null) {
@@ -108,7 +105,7 @@ require_once './app/helpers/auth.api.helper.php';
             if ($player){
             $player = $this->getData();
             $id = $this->model->update($player->Number,$player->Position,$player->Player_Name,$player->Team_id_fk,$id);
-            $this->view->response("El jugador con id=$id se actualizo correctamente",200);
+            $this->view->response("El jugador se actualizo correctamente",200);
             }else {
             $this->view->response("El jugador no existe",404);
         }

@@ -65,7 +65,7 @@ require_once './app/helpers/auth.api.helper.php';
             if ($team)
                 $this->view->response($team);
             else 
-                $this->view->response("El equipo con el id=$id no existe", 404);
+                $this->view->response("El equipo no existe", 404);
         }
 
         public function deleteTeam($params = null) {
@@ -75,7 +75,7 @@ require_once './app/helpers/auth.api.helper.php';
                   $this->model->delete($id);
                   $this->view->response("El equipo no se pudo eliminar porque tiene jugadores aun, elimine los jugadores pertenecientes a este equipo primero",400);
                 }else 
-                  $this->view->response("El equipo con id=$id se elimino correctamente",200);
+                  $this->view->response("El equipo se elimino correctamente",200);
                 
             }
           
@@ -104,7 +104,7 @@ require_once './app/helpers/auth.api.helper.php';
             if ($team){
             $team = $this->getData();
             $id = $this->model->update($team->Team,$team->Rings,$team->City,$id);
-            $this->view->response("El equipo con id=$id se actualizo correctamente",200);
+            $this->view->response("El equipo se actualizo correctamente",200);
             }else {
             $this->view->response("El equipo no existe",404);
         }
